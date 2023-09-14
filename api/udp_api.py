@@ -73,9 +73,17 @@ class UDPClient:
 
     def handle_ping(self, data: str, addr: tuple, sock: object):
         data = data.split(" ")
-        print(f"Pinged by {addr[0]} {data[1]}")
-        message = f"pong server {self.port}".encode()
-        sock.sendto(message, (addr[0], data[2]))
+        try:
+            pseudo = data[1]
+            ip = addr[0]
+            port = data[2]
+            print(f"Pinged by {pseudo} {ip}")
+            message = f"pong {self.name} {self.port}".encode()
+            sock.sendto(message, (addr[0], data[2]))
+        except IndexError:
+            print("Le ping ne contient pas le pseudo/port")
+
+
 
 if __name__ == "__main__":
     client = UDPClient("timtonix", 2236)
