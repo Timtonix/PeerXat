@@ -18,3 +18,4 @@
 
 ## But du projet
 - Le but n'est pas seulement de communiquer, mais aussi de pouvoir héberger des jeux, *créer un réseau privé* pour les élèves NSI...
+- 
