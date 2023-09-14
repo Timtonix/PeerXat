@@ -77,11 +77,13 @@ class UDPClient:
             pseudo = data[1]
             ip = addr[0]
             port = data[2]
-            print(f"Pinged by {pseudo} {ip}")
-            message = f"pong {self.name} {self.port}".encode()
-            sock.sendto(message, (addr[0], data[2]))
+
         except IndexError:
             print("Le ping ne contient pas le pseudo/port")
+        else:
+            print(f"Pinged by {pseudo} {ip}:{port}")
+            message = f"pong {self.name} {self.port}".encode()
+            sock.sendto(message, (ip, port))
 
 
 
