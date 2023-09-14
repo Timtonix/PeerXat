@@ -1,7 +1,13 @@
 import sqlite3
+import datetime
 
 con = sqlite3.connect("peer.db")
 cursor = con.cursor()
 
-cursor.execute("CREATE TABLE IF NOT EXISTS peers(pseudo VARCHAR(20), ip VARCHAR(20), port VARCHAR(6), date_connection TEXT)")
+cursor.execute("CREATE TABLE IF NOT EXISTS peers(pseudo VARCHAR(20), ip VARCHAR(20), port INT, date_connection TEXT)")
+con.commit()
 
+
+def add_peer(pseudo: str, ip: str, port: int):
+    date = datetime.datetime.now()
+    cursor.execute("""INSERT INTO peers(pseudo, ip, port, date_connection) VALUES (?, ?, ?, ?) """, (pseudo, ip, port, date))

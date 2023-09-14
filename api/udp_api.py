@@ -2,6 +2,7 @@ import socket
 import morse as api
 import netifaces
 import time
+import bdd
 
 
 def get_hostname() -> list:
@@ -66,24 +67,23 @@ class UDPClient:
         except OSError as e:
             print(e)
 
-    def add_peer(self, pseudo: str, ip: str, port: int):
-        if ip != self.client_ip:
-            self.peers[ip] = (pseudo, port)
-
 
     def handle_ping(self, data: str, addr: tuple, sock: object):
         data = data.split(" ")
         try:
             pseudo = data[1]
             ip = addr[0]
-            port = data[2]
-
-        except IndexError:
+            port = int(data[2])
+        except IndexError or ValueError:
             print("Le ping ne contient pas le pseudo/port")
         else:
             print(f"Pinged by {pseudo} {ip}:{port}")
-            message = f"pong {self.name} {self.port}".encode()
-            sock.sendto(message, (ip, port))
+            if len(pseudo) < 20 and port < 65635:
+                bdd.add_peer(pseudo, ip, port)
+                message = f"pong {self.name} {self.port}".encode()
+                sock.sendto(message, (ip, port))
+            else:
+                print(" I wont respond to that guy")
 
 
 
