@@ -16,7 +16,7 @@ def get_hostname() -> list:
 
 
 class UDPClient:
-    def __init__(self, name, port, reachable: str = "on", discoverable: str = "on"):
+    def __init__(self, name, port=50001, reachable: str = "on", discoverable: str = "on"):
         self.name = name
         self.port = port
         self.client_ip = get_hostname()
@@ -59,7 +59,7 @@ class UDPClient:
                 print(data)
                 print(f"converted : {api.morse_to_text(data)}")
 
-    def sender(self, message: str, ip: str, port: int = 2236):
+    def sender(self, message: str, ip: str, port: int = 50001):
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         request = f"{message}".encode()
         try:
@@ -77,8 +77,8 @@ class UDPClient:
         except IndexError or ValueError:
             print("Le ping ne contient pas le pseudo/port")
         else:
-            print(f"Pinged by {pseudo} {ip}:{port}")
-            if len(pseudo) < 20 and port < 65635:
+            print(f"Pinged by {pseudo} {ip}")
+            if len(pseudo) < 20 and 50000 < port < 65635:
                 bdd.add_peer(pseudo, ip, port)
                 message = f"pong {self.name} {self.port}".encode()
                 sock.sendto(message, (ip, port))
@@ -88,5 +88,5 @@ class UDPClient:
 
 
 if __name__ == "__main__":
-    client = UDPClient("timtonix", 2236)
+    client = UDPClient("timtonix", 50001)
     print(client.client_ip)
