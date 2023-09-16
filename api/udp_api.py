@@ -1,8 +1,7 @@
 import socket
-import morse as api
 import netifaces
 import time
-import bdd
+import api.bdd as bdd
 
 
 def get_hostname() -> list:
@@ -57,7 +56,6 @@ class UDPClient:
                 print(data)
             else:
                 print(data)
-                print(f"converted : {api.morse_to_text(data)}")
 
     def sender(self, message: str, ip: str, port: int = 50001):
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -66,7 +64,6 @@ class UDPClient:
             sock.sendto(request, (ip, port))
         except OSError as e:
             print(e)
-
 
     def handle_ping(self, data: str, addr: tuple, sock: object):
         data = data.split(" ")
@@ -84,7 +81,6 @@ class UDPClient:
                 sock.sendto(message, (ip, port))
             else:
                 print(" I wont respond to that guy")
-
 
 
 if __name__ == "__main__":
