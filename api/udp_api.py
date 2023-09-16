@@ -7,7 +7,7 @@ import api.bdd as bdd
 def get_hostname() -> list:
     host = []
     for interface in netifaces.interfaces():
-        if interface == "lo" or "vbox" in interface:
+        if interface == "lo" or "vbox" or "docker" in interface:
             host.append(socket.gethostbyname(socket.gethostname()))
         else:
             details = netifaces.ifaddresses(interface)
