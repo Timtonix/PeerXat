@@ -9,5 +9,7 @@ con.commit()
 
 
 def add_peer(pseudo: str, ip: str, port: int):
+    print("On m'a appelé")
     date = datetime.datetime.now()
     cursor.execute("""INSERT INTO peers(pseudo, ip, port, date_connection) VALUES (?, ?, ?, ?) """, (pseudo, ip, port, date))
+    con.commit()
