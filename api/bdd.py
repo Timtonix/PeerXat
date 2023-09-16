@@ -1,7 +1,7 @@
 import sqlite3
 import datetime
 
-con = sqlite3.connect("peer.db")
+con = sqlite3.connect("peer.db", check_same_thread=False)
 cursor = con.cursor()
 
 cursor.execute("CREATE TABLE IF NOT EXISTS peers(pseudo VARCHAR(20), ip VARCHAR(20), port INT, date_connection TEXT)")
