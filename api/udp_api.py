@@ -8,9 +8,10 @@ def get_hostname() -> list:
     host = []
     for interface in netifaces.interfaces():
         if interface == "lo" or "vbox" in interface:
-            continue
-        details = netifaces.ifaddresses(interface)
-        host.append(details[netifaces.AF_INET][0]["addr"])
+            host.append(socket.gethostbyname(socket.gethostname()))
+        else:
+            details = netifaces.ifaddresses(interface)
+            host.append(details[netifaces.AF_INET][0]["addr"])
     return host
 
 
