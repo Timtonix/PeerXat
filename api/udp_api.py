@@ -7,11 +7,13 @@ import api.bdd as bdd
 def get_hostname() -> list:
     host = []
     for interface in netifaces.interfaces():
-        if interface == "lo" or "vbox" or "docker" in interface:
-            host.append(socket.gethostbyname(socket.gethostname()))
-        else:
-            details = netifaces.ifaddresses(interface)
+        if interface.startswith(("lo", "docker", "vbox")):
+            continue
+        details = netifaces.ifaddresses(interface)
+        try:
             host.append(details[netifaces.AF_INET][0]["addr"])
+        except KeyError as e:
+            print(f"L'interface {interface} n'a pas d'adresse AF_INET")
     return host
 
 
@@ -21,6 +23,7 @@ class UDPClient:
         self.port = port
         self.client_ip = get_hostname()
         self.split_ip = list(map(int, self.client_ip[0].split(".")))
+
         self.peers = {}
         self.discoverable = discoverable
         self.reachable = reachable
