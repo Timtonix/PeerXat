@@ -4,18 +4,22 @@ import time
 import api.utils as utils
 
 
-def get_hostname() -> list:
-    host = []
+def get_hostname() -> dict:
+    """
+    use netifaces to discover your interfaces.
+    Check for the first Interface that have an afinet IP and a broadcat
+
+    :return: A dict with the broadcast and the local Ip address
+    """
     for interface in netifaces.interfaces():
         if interface.startswith(("lo", "docker", "vbox")):
             continue
         details = netifaces.ifaddresses(interface)
         try:
-            broadcast = (details[netifaces.AF_INET][0]["broadcast"], details[netifaces.AF_INET][0]["addr"])
-            host.append(broadcast)
+            broadcast = {"broadcast": details[netifaces.AF_INET][0]["broadcast"], "afinet": details[netifaces.AF_INET][0]["addr"]}
+            return broadcast
         except KeyError:
             print(f"L'interface {interface} n'a pas d'adresse AF_INET")
-    return host
 
 
 class UDPClient:
@@ -23,7 +27,7 @@ class UDPClient:
         self.name = name
         self.port = port
         self.client_ip = get_hostname()
-        self.split_ip = list(map(int, self.client_ip[0][0].split(".")))
+        self.split_ip = list(map(int, self.client_ip["broadcast"].split(".")))
 
         self.peers = {}
         self.discoverable = discoverable
@@ -37,7 +41,7 @@ class UDPClient:
             host_list[3] = i
             ip = ".".join(map(str, host_list))
             try:
-                if self.client_ip[0][1] != ip:
+                if self.client_ip["afinet"] != ip:
                     sock.sendto(ping_message.encode(), (ip, self.port))
             except OSError as e:
                 print(f"{ip} except an error : {e}")
