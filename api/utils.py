@@ -1,10 +1,11 @@
 import re
-import api.bdd
+import api.bdd as bdd
 
 
-def handle_connection(data: str, addr: tuple, connection: str):
+def handle_connection(data: str, addr: tuple):
     m = re.match(r"p(i | o)ng (\w+) (\d+)", data)
     if m:
+        print(m.group())
         pseudo = m.group(1)
         port = int(m.group(2))
         ip = addr[0]
