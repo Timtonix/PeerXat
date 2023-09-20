@@ -1,5 +1,5 @@
 import re
-import bdd
+import api.bdd
 
 
 def handle_connection(data: str, addr: tuple, connection: str):

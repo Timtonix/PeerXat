@@ -1,7 +1,7 @@
 import socket
 import netifaces
 import time
-import utils
+import api.utils as utils
 
 
 def get_hostname() -> list:
@@ -11,9 +11,9 @@ def get_hostname() -> list:
             continue
         details = netifaces.ifaddresses(interface)
         try:
-            ip = (details[netifaces.AF_INET][0]["broadcast"], details[netifaces.AF_INET][0]["addr"])
-            host.append(details[netifaces.AF_INET][0]["broadcast"])
-        except KeyError as e:
+            broadcast = (details[netifaces.AF_INET][0]["broadcast"], details[netifaces.AF_INET][0]["addr"])
+            host.append(broadcast)
+        except KeyError:
             print(f"L'interface {interface} n'a pas d'adresse AF_INET")
     return host
 
