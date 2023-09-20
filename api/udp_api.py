@@ -58,11 +58,16 @@ class UDPClient:
             data, addr = sock.recvfrom(1024)
             data = data.decode("utf-8")
             if data.startswith("ping"):
-                if not utils.handle_connection(data, addr):
+                port = utils.handle_connection(data, addr)
+                if not port:
                     print(f"Someone wants to fight !")
+                else:
+                    self.sender(f"pong {self.name} {self.port}", addr[0], port=port)
             elif data.startswith("pong"):
-                if not utils.handle_connection(data, addr):
+                port = utils.handle_connection(data, addr)
+                if not port:
                     print(f"Someone wants to fight !")
+
             else:
                 print(data)
 

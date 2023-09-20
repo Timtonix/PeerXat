@@ -11,5 +11,5 @@ def handle_connection(data: str, addr: tuple):
         ip = addr[0]
         if len(pseudo) < 20 and 50000 < port < 65635:
             bdd.add_peer(pseudo, ip, port)
-            return True, ip, port
-    return False
+            return True, port
+    return False, None
