@@ -1,8 +1,7 @@
 import socket
 import netifaces
 import time
-import api.bdd as bdd
-import re
+import utils
 
 
 def get_hostname() -> list:
@@ -55,11 +54,11 @@ class UDPClient:
             data, addr = sock.recvfrom(1024)
             data = data.decode("utf-8")
             if data.startswith("ping"):
-                self.handle_ping(data, addr)
+                if not utils.handle_connection(data, addr):
+                    print(f"Someone wants to fight !")
             elif data.startswith("pong"):
-                data = data.split(" ")
-                print(f"Ponged by {data[1]}")
-                print(data)
+                if not utils.handle_connection(data, addr):
+                    print(f"Someone wants to fight !")
             else:
                 print(data)
 
@@ -71,21 +70,7 @@ class UDPClient:
         except OSError as e:
             print(e)
 
-    def handle_ping(self, data: str, addr: tuple):
-        m = re.match(r"ping (\w+) (\d+)", data)
-        if m:
-            pseudo = m.group(1)
-            port = int(m.group(2))
-            ip = addr[0]
-            print(f"Pinged by {pseudo} {ip}")
-            if len(pseudo) < 20 and 50000 < port < 65635:
-                bdd.add_peer(pseudo, ip, port)
-                message = f"pong {self.name} {self.port}"
-                self.sender(message, ip, port)
-            else:
-                print(" I wont respond to that guy")
-        else:
-            print("Une personne a essayé de nous envoyer un ping frauduleux")
+
 
 
 if __name__ == "__main__":
