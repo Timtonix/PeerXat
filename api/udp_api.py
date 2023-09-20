@@ -73,7 +73,7 @@ class UDPClient:
 
     def sender(self, message: str, ip: str, port: int = 50001):
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        request = f"{message}".encode()
+        request = message.encode()
         try:
             sock.sendto(request, (ip, port))
         except OSError as e:
